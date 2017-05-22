@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+OFF > FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL
+缺省的配置等同于如下配置，其中Root指定的level是error，所有只输出了error和fatal级别的日志。
+ -->
+<Configuration status="WARN">
+	<Appenders><!-- 输出器 -->
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+	</Appenders>
+	<Loggers>
+		<Root level="error">
+			<AppenderRef ref="Console" />
+		</Root>
+	</Loggers>
+</Configuration>

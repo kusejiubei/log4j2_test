@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- OFF > FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL -->
+<Configuration status="OFF" monitorInterval="300">
+	<properties>
+		<property name="LOG_NAME">demo</property>
+	</properties>
+	<Appenders><!-- 输出器 -->
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+		<RollingFile name="RollingFile" fileName="logs/rolling.log"
+			filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz"
+			append="false"><!-- 下次启动禁止拼接日志（将新文件输出） -->
+			<PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} [%file:%line] %msg%n" />
+
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="1 KB" />
+			</Policies>
+			<DefaultRolloverStrategy fileIndex="max" max="9" />
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<!--
+			 ①：com.demo.NamedHierarchy是com.demo的子节点。 同时Logger的命名和类的命名又有关联的，如果我们在配置文件中配置一个Logger的名称为com.demo.NamedHierarchy，那么类com.demo.NamedHierarchy中的Logger就会匹配到这一配置，同时所有父节点的配置也会被适用。所以在我们使用logger.trace("TRACE: 
+				" + nh + " " + logger.getLevel()); 输出日志时，配置文件中3个Logger对应的Appender分别被调用。
+			 ②：如果你不希望LogEvent被按命名层次分别处理，只希望最低一层的子节点处理，那么可以在Logger配置时增加additivity="false" 
+			 ③：Log4j2支持定时检查配置文件是否变化并根据变化重新加载，这个功能在实际应用中比较有价值-在Configuration中增加monitorInterval="30"参数，其中30指30秒 -->
+		<Logger name="com.demo" level="error" additivity="false">
+			<AppenderRef ref="RollingFile" />
+		</Logger>
+        <root level="debug">
+            <AppenderRef ref="Console" />
+        </root>
+         
+		
+	</Loggers>
+</Configuration>
